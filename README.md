@@ -1,6 +1,6 @@
 # DualSense Link
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)(https://github.com/rom4ukqq/dualsense_link/blob/main/LICENSE.md)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 [![Windows](https://img.shields.io/badge/Platform-Windows-blue)](https://www.microsoft.com)
 
 **DualSense Link** enables a Bluetooth-connected Sony DualSense Wireless Controller to appear as a wired USB DualSense controller on Windows, supporting full features: adaptive triggers, haptics, gyro, touchpad, LED, and battery reporting.
