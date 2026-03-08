@@ -24,6 +24,10 @@ Expose a Bluetooth DualSense controller to Windows games as a wired USB DualSens
 - Service sends `ServiceStatus`, `ServiceRawInput`, and `ServiceInfo`.
 - Transport is duplex named pipe `\\.\pipe\DualSenseLink`.
 
+## UI Runtime Note
+- `dsl_ui` is now a buildable desktop window target in CMake (Win32 host) that uses the same IPC client.
+- Existing WinUI 3 XAML files are preserved as a parallel skeleton for the next Windows App SDK integration step.
+
 ## Reverse Path (Output Reports)
 1. Game sends output report (rumble/lightbar) to virtual device.
 2. Driver/service transport receives output report.

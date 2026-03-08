@@ -64,7 +64,7 @@ void PipeClient::RunReadLoop() {
     while(running_.load()) {
         if(pipe_ == INVALID_HANDLE_VALUE) {
             pipe_ = CreateFileW(
-                shared::kPipeName.data(),
+                dsl::shared::kPipeName.data(),
                 GENERIC_READ | GENERIC_WRITE,
                 0,
                 nullptr,
