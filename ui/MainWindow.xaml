@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -18,9 +19,15 @@
 
         <local:ControllerDashboard x:Name="Dashboard" Grid.Row="1" />
 
-        <StackPanel Grid.Row="2" Spacing="8">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+            <Button Content="Refresh" Click="OnRefreshClicked" />
+            <Button Content="Live ON" Click="OnLiveOnClicked" />
+            <Button Content="Live OFF" Click="OnLiveOffClicked" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Spacing="8">
             <TextBlock Text="Raw HID Input Stream" FontSize="16" />
-            <TextBox x:Name="RawInputTextBox" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox x:Name="RawInputTextBox" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap" />
         </StackPanel>
     </Grid>
 </Window>

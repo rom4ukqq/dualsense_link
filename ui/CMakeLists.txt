@@ -5,6 +5,8 @@ add_custom_target(dsl_ui_skeleton SOURCES
     MainWindow.xaml
     MainWindow.xaml.h
     MainWindow.xaml.cpp
+    PipeClient.h
+    PipeClient.cpp
     ControllerDashboard.xaml
     ControllerDashboard.xaml.h
     ControllerDashboard.xaml.cpp

@@ -1,0 +1,10 @@
+^C:\USERS\LISIA\DOCUMENTS\GITHUB\DUALSENSE_LINK\BUILD\CMAKEFILES\8CED4DF8715091F62ED7355467AAE0D0\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/lisia/Documents/GitHub/dualsense_link -BC:/Users/lisia/Documents/GitHub/dualsense_link/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/lisia/Documents/GitHub/dualsense_link/build/dualsense-link.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

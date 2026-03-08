@@ -1,0 +1,7 @@
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/CMakeFiles/dsl_core.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/CMakeFiles/dsl_ipc.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/CMakeFiles/dsl_service.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/driver/CMakeFiles/dsl_driver.dir
+C:/Users/lisia/Documents/GitHub/dualsense_link/build/ui/CMakeFiles/dsl_ui_skeleton.dir

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\lisia\Documents\GitHub\dualsense_link\build\CMakeFiles\8ced4df8715091f62ed7355467aae0d0\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D48F0464-979B-3EDF-BA80-EDAF373E071D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

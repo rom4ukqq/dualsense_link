@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/lisia/Documents/GitHub/dualsense_link/build/cmake_install.cmake",
+		"C:/Users/lisia/Documents/GitHub/dualsense_link/build/driver/cmake_install.cmake",
+		"C:/Users/lisia/Documents/GitHub/dualsense_link/build/ui/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,6 +1,8 @@
 #include "ipc/pipe_server.h"
 
+#include <cstring>
 #include <utility>
+#include <vector>
 
 namespace dsl::ipc {
 
@@ -20,12 +22,8 @@ void PipeServer::Stop() {
     if(!running_.exchange(false)) {
         return;
     }
-
-    if(pipe_ != INVALID_HANDLE_VALUE) {
-        DisconnectNamedPipe(pipe_);
-        CloseHandle(pipe_);
-        pipe_ = INVALID_HANDLE_VALUE;
-    }
+    connected_ = false;
+    ClosePipe();
 
     if(worker_thread_.joinable()) {
         worker_thread_.request_stop();
@@ -38,15 +36,25 @@ void PipeServer::SetOnCommand(CommandCallback callback) {
     on_command_ = std::move(callback);
 }
 
-bool PipeServer::SendStatus(const shared::ControllerStatus& status) {
-    StatusPayload payload{};
-    payload.connection_state = static_cast<std::uint8_t>(status.connection);
-    payload.battery_percent = status.battery_percent;
+bool PipeServer::SendStatus(const StatusPayload& status) {
+    const auto payload = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(&status),
+        sizeof(status));
+    return SendMessage(CommandType::ServiceStatus, payload);
+}
 
-    CommandHeader header{};
-    header.type = CommandType::GetStatus;
-    header.payload_size = sizeof(payload);
-    return SendRaw(&header, sizeof(header)) && SendRaw(&payload, sizeof(payload));
+bool PipeServer::SendRawInput(const std::string_view utf8_line) {
+    const auto payload = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(utf8_line.data()),
+        utf8_line.size());
+    return SendMessage(CommandType::ServiceRawInput, payload);
+}
+
+bool PipeServer::SendInfo(const std::string_view utf8_line) {
+    const auto payload = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(utf8_line.data()),
+        utf8_line.size());
+    return SendMessage(CommandType::ServiceInfo, payload);
 }
 
 void PipeServer::Run() {
@@ -54,7 +62,9 @@ void PipeServer::Run() {
         if(!CreateAndConnectPipe()) {
             continue;
         }
+        connected_ = true;
         HandleConnectedClient();
+        connected_ = false;
         ClosePipe();
     }
 }
@@ -65,8 +75,8 @@ bool PipeServer::CreateAndConnectPipe() {
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
         1,
-        4096,
-        4096,
+        8192,
+        8192,
         0,
         nullptr);
 
@@ -76,12 +86,13 @@ bool PipeServer::CreateAndConnectPipe() {
 
     const bool connected = ConnectNamedPipe(pipe_, nullptr) != FALSE ||
                            GetLastError() == ERROR_PIPE_CONNECTED;
-    if(!connected) {
-        CloseHandle(pipe_);
-        pipe_ = INVALID_HANDLE_VALUE;
-        return false;
+    if(connected) {
+        return true;
     }
-    return true;
+
+    CloseHandle(pipe_);
+    pipe_ = INVALID_HANDLE_VALUE;
+    return false;
 }
 
 void PipeServer::HandleConnectedClient() {
@@ -95,6 +106,7 @@ void PipeServer::HandleConnectedClient() {
 }
 
 void PipeServer::ClosePipe() {
+    std::scoped_lock write_lock(write_mutex_);
     if(pipe_ == INVALID_HANDLE_VALUE) {
         return;
     }
@@ -115,6 +127,25 @@ void PipeServer::DispatchCommand(const CommandMessage& message) {
     }
 }
 
+bool PipeServer::SendMessage(const CommandType type, const std::span<const std::uint8_t> payload) {
+    if(!connected_.load()) {
+        return false;
+    }
+
+    CommandHeader header{};
+    header.type = type;
+    header.payload_size = static_cast<std::uint16_t>(payload.size());
+
+    std::scoped_lock lock(write_mutex_);
+    if(!SendRaw(&header, sizeof(header))) {
+        return false;
+    }
+    if(payload.empty()) {
+        return true;
+    }
+    return SendRaw(payload.data(), payload.size());
+}
+
 bool PipeServer::ReadMessage(CommandMessage& message) {
     DWORD bytes_read = 0;
     if(!ReadFile(pipe_, &message.header, sizeof(message.header), &bytes_read, nullptr)) {
@@ -123,8 +154,8 @@ bool PipeServer::ReadMessage(CommandMessage& message) {
     if(bytes_read != sizeof(message.header)) {
         return false;
     }
-
     if(message.header.payload_size == 0) {
+        message.payload.clear();
         return true;
     }
 

@@ -19,6 +19,11 @@ Expose a Bluetooth DualSense controller to Windows games as a wired USB DualSens
 - `ui/`: WinUI 3 skeleton with status, battery, and raw report view.
 - `shared/`: cross-module constants and common structures.
 
+## UI IPC
+- UI sends `UiRequestStatus` and `UiSetLiveStream`.
+- Service sends `ServiceStatus`, `ServiceRawInput`, and `ServiceInfo`.
+- Transport is duplex named pipe `\\.\pipe\DualSenseLink`.
+
 ## Reverse Path (Output Reports)
 1. Game sends output report (rumble/lightbar) to virtual device.
 2. Driver/service transport receives output report.
