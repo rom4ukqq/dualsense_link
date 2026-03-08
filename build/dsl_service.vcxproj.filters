@@ -7,7 +7,25 @@
     <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\bluetooth_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_virtual_hid_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\controller_proxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\driver_bridge_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\state_format.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

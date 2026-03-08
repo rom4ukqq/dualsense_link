@@ -1,45 +1,82 @@
-# DualSense Link Architecture
+# DualSense Link Architecture (Stage 1: HID-first)
 
 ## Goal
-Expose a Bluetooth DualSense controller to Windows games as a wired USB DualSense.
+
+Expose a Bluetooth-connected DualSense as a wired USB-style DualSense device for Windows games.
+
+Audio over the controller USB profile is intentionally out of scope for this stage.
 
 ## Data Flow
-1. Physical controller is connected over Bluetooth HID.
-2. `dsl_service` discovers and opens the HID interface.
-3. Incoming Bluetooth reports are parsed in `core/dualsense_parser`.
-4. Parsed reports are translated into USB-shaped packets in `core/packet_translation`.
-5. USB-shaped packets are forwarded to a virtual HID device implemented by KMDF + VHF driver code.
-6. Games consume input from the virtual device as if it were a wired controller.
+
+1. DualSense connected via Bluetooth HID.
+2. `dsl_service` opens the HID interface and reads input reports continuously.
+3. `core/dualsense_parser` validates/parses reports (including BT CRC where required).
+4. `core/packet_translation` maps BT format to USB report format.
+5. Service sends USB-style input report to KMDF/VHF driver bridge.
+6. Windows and games see a wired-style controller device.
+
+Reverse path:
+
+1. Game sends output report (rumble/lightbar/triggers) to virtual device.
+2. Driver exposes output queue via IOCTL.
+3. Service reads output, translates USB -> BT, and writes to Bluetooth controller.
 
 ## Components
-- `service/`: long-running bridge process and Bluetooth HID I/O.
-- `core/`: parsing and packet translation logic.
-- `driver/`: KMDF/VHF virtual HID skeleton.
-- `ipc/`: named pipe IPC for UI and diagnostics.
-- `ui/`: WinUI 3 skeleton with status, battery, and raw report view.
-- `shared/`: cross-module constants and common structures.
 
-## UI IPC
-- UI sends `UiRequestStatus` and `UiSetLiveStream`.
-- Service sends `ServiceStatus`, `ServiceRawInput`, and `ServiceInfo`.
-- Transport is duplex named pipe `\\.\pipe\DualSenseLink`.
+- `core/`: parsing and report translation logic.
+- `service/`: runtime orchestration, bridge mode management, HidHide integration.
+- `driver/`: KMDF + VHF virtual HID skeleton.
+- `ipc/`: named-pipe command/status stream for UI.
+- `ui/`: WinUI 3 app (`ui/winui3/DualSenseLinkUI.vcxproj`) with status dashboard.
+- `shared/`: cross-layer constants and contracts.
 
-## UI Runtime Note
-- `dsl_ui` is now a buildable desktop window target in CMake (Win32 host) that uses the same IPC client.
-- Existing WinUI 3 XAML files are preserved as a parallel skeleton for the next Windows App SDK integration step.
+## Service Modes
 
-## Reverse Path (Output Reports)
-1. Game sends output report (rumble/lightbar) to virtual device.
-2. Driver/service transport receives output report.
-3. `ControllerProxy` maps USB output format back to Bluetooth format.
-4. `BluetoothManager::WriteOutputReport` forwards packet to physical controller.
+- `--background` (default): UI-driven mode; no interactive console.
+- `--console`: diagnostic mode with console commands.
+- `--allow-fallback`: allows console virtual HID fallback if driver bridge is unavailable.
 
-## Protocol Notes
-- Bluetooth input reports use `ReportID=0x31`, total `78` bytes, with CRC32 in the last 4 bytes.
-- Bluetooth output reports use `ReportID=0x31`, include `seq_tag` + `tag=0x10`, and require CRC32.
-- USB input reports use `ReportID=0x01` and `64` bytes total.
-- USB output reports use `ReportID=0x02` and `63` bytes total.
+In background mode, driver bridge is required by default.
 
-## Notes
-- Driver code includes stub fallback when WDK headers are not installed.
-- Real production descriptor and report mapping must be validated against full DualSense HID spec.
+## Driver Contract
+
+Single shared contract file: `shared/driver_protocol.h`.
+
+IOCTLs:
+
+- `IOCTL_DSL_GET_VERSION`
+- `IOCTL_DSL_SUBMIT_INPUT_REPORT`
+- `IOCTL_DSL_GET_OUTPUT_REPORT`
+- `IOCTL_DSL_PUSH_OUTPUT_REPORT` (debug/test injection path)
+
+The driver keeps output reports in a bounded, lock-protected queue to make IOCTL behavior predictable.
+
+## UI Contract
+
+IPC protocol is defined in `ipc/commands.h`.
+
+Important service->UI messages:
+
+- `ServiceStatus`
+- `ServiceRawInput`
+- `ServiceInfo`
+- `ServiceHidHideStatus`
+- `ServiceBridgeStatus` (`driver-bridge`, `fallback`, `unknown`)
+
+This makes bridge mode explicit instead of inferring it from free-form log lines.
+
+## HidHide Integration
+
+Service handles HidHide operations (install/running checks, app whitelist, hide/unhide + cloak toggles).
+UI only sends toggle/status commands and displays resulting state.
+
+## Build/Run Separation
+
+- Backend (`service/core/ipc/driver` skeleton): CMake.
+- WinUI 3 frontend: standalone Visual Studio project (`.vcxproj`).
+- PowerShell scripts provide unified flow:
+  - `preflight.ps1`
+  - `build_backend.ps1`
+  - `build_ui.ps1`
+  - `install_driver.ps1`
+  - `run_app.ps1`

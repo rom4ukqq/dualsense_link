@@ -39,7 +39,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsl_service", "dsl_service.
 		{3F4EDD3A-B2BF-36F1-86F3-891129E38FCA} = {3F4EDD3A-B2BF-36F1-86F3-891129E38FCA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsl_ui_skeleton", "ui\dsl_ui_skeleton.vcxproj", "{D23E3865-0E8A-3F8A-89EF-007CF374F558}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsl_ui_winui_skeleton", "ui\dsl_ui_winui_skeleton.vcxproj", "{58EF7CF4-0D70-3504-952A-B819BC72A272}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AD7BF2E0-B73B-385B-9E77-6D8F357FCDD4} = {AD7BF2E0-B73B-385B-9E77-6D8F357FCDD4}
 	EndProjectSection
@@ -96,10 +96,10 @@ Global
 		{D16F50DE-3F4F-33C8-AD4B-ADB829DEEC7F}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
 		{D16F50DE-3F4F-33C8-AD4B-ADB829DEEC7F}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{D16F50DE-3F4F-33C8-AD4B-ADB829DEEC7F}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
-		{D23E3865-0E8A-3F8A-89EF-007CF374F558}.Debug|x64.ActiveCfg = Debug|x64
-		{D23E3865-0E8A-3F8A-89EF-007CF374F558}.Release|x64.ActiveCfg = Release|x64
-		{D23E3865-0E8A-3F8A-89EF-007CF374F558}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
-		{D23E3865-0E8A-3F8A-89EF-007CF374F558}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{58EF7CF4-0D70-3504-952A-B819BC72A272}.Debug|x64.ActiveCfg = Debug|x64
+		{58EF7CF4-0D70-3504-952A-B819BC72A272}.Release|x64.ActiveCfg = Release|x64
+		{58EF7CF4-0D70-3504-952A-B819BC72A272}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{58EF7CF4-0D70-3504-952A-B819BC72A272}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C8E85A8E-7110-3F35-A47F-1F9AF6586209} = {07CDAF58-ABC8-3EC8-B7F7-2DE45E26F4BA}

@@ -366,7 +366,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\main.cpp" />
     <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\bluetooth_manager.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_runtime.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_virtual_hid_client.cpp" />
     <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\controller_proxy.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\driver_bridge_client.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_helpers.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_manager.cpp" />
+    <ClCompile Include="C:\Users\lisia\Documents\GitHub\dualsense_link\service\state_format.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

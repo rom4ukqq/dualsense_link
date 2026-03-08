@@ -22,4 +22,7 @@ constexpr NTSTATUS STATUS_NOT_SUPPORTED = static_cast<NTSTATUS>(0xC00000BBL);
 extern "C" DRIVER_INITIALIZE DriverEntry;
 EVT_WDF_DRIVER_DEVICE_ADD DslEvtDeviceAdd;
 EVT_WDF_OBJECT_CONTEXT_CLEANUP DslEvtDeviceContextCleanup;
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL DslEvtIoDeviceControl;
+
+NTSTATUS DslCreateDefaultQueue(WDFDEVICE device);
 #endif

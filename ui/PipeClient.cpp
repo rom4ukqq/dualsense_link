@@ -36,6 +36,10 @@ bool PipeClient::RequestStatus() {
     return SendCommand(dsl::ipc::CommandType::UiRequestStatus, {});
 }
 
+bool PipeClient::RequestServiceShutdown() {
+    return SendCommand(dsl::ipc::CommandType::UiShutdownService, {});
+}
+
 bool PipeClient::SetLiveStreamEnabled(const bool enabled) {
     dsl::ipc::LiveStreamPayload payload{};
     payload.enabled = enabled ? 1 : 0;
@@ -45,9 +49,32 @@ bool PipeClient::SetLiveStreamEnabled(const bool enabled) {
     return SendCommand(dsl::ipc::CommandType::UiSetLiveStream, bytes);
 }
 
+bool PipeClient::RequestHidHideStatus() {
+    return SendCommand(dsl::ipc::CommandType::UiRequestHidHideStatus, {});
+}
+
+bool PipeClient::SetHidHideEnabled(const bool enabled) {
+    dsl::ipc::HidHideTogglePayload payload{};
+    payload.enabled = enabled ? 1 : 0;
+    const auto bytes = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(&payload),
+        sizeof(payload));
+    return SendCommand(dsl::ipc::CommandType::UiSetHidHideEnabled, bytes);
+}
+
 void PipeClient::SetOnStatus(StatusCallback callback) {
     std::scoped_lock lock(callback_mutex_);
     on_status_ = std::move(callback);
+}
+
+void PipeClient::SetOnHidHideStatus(HidHideStatusCallback callback) {
+    std::scoped_lock lock(callback_mutex_);
+    on_hidhide_status_ = std::move(callback);
+}
+
+void PipeClient::SetOnBridgeStatus(BridgeStatusCallback callback) {
+    std::scoped_lock lock(callback_mutex_);
+    on_bridge_status_ = std::move(callback);
 }
 
 void PipeClient::SetOnRawInput(TextCallback callback) {
@@ -90,11 +117,15 @@ void PipeClient::RunReadLoop() {
 
 void PipeClient::DispatchMessage(const dsl::ipc::CommandMessage& message) {
     StatusCallback status_cb;
+    HidHideStatusCallback hidhide_status_cb;
+    BridgeStatusCallback bridge_status_cb;
     TextCallback raw_cb;
     TextCallback info_cb;
     {
         std::scoped_lock lock(callback_mutex_);
         status_cb = on_status_;
+        hidhide_status_cb = on_hidhide_status_;
+        bridge_status_cb = on_bridge_status_;
         raw_cb = on_raw_input_;
         info_cb = on_info_;
     }
@@ -105,6 +136,26 @@ void PipeClient::DispatchMessage(const dsl::ipc::CommandMessage& message) {
         std::memcpy(&payload, message.payload.data(), sizeof(payload));
         if(status_cb) {
             status_cb(payload);
+        }
+        return;
+    }
+
+    if(message.header.type == dsl::ipc::CommandType::ServiceHidHideStatus &&
+       message.payload.size() >= sizeof(dsl::ipc::HidHideStatusPayload)) {
+        dsl::ipc::HidHideStatusPayload payload{};
+        std::memcpy(&payload, message.payload.data(), sizeof(payload));
+        if(hidhide_status_cb) {
+            hidhide_status_cb(payload);
+        }
+        return;
+    }
+
+    if(message.header.type == dsl::ipc::CommandType::ServiceBridgeStatus &&
+       message.payload.size() >= sizeof(dsl::ipc::BridgeStatusPayload)) {
+        dsl::ipc::BridgeStatusPayload payload{};
+        std::memcpy(&payload, message.payload.data(), sizeof(payload));
+        if(bridge_status_cb) {
+            bridge_status_cb(payload);
         }
         return;
     }

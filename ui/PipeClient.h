@@ -17,6 +17,8 @@ namespace dualsense_link::ui {
 class PipeClient {
 public:
     using StatusCallback = std::function<void(const dsl::ipc::StatusPayload&)>;
+    using HidHideStatusCallback = std::function<void(const dsl::ipc::HidHideStatusPayload&)>;
+    using BridgeStatusCallback = std::function<void(const dsl::ipc::BridgeStatusPayload&)>;
     using TextCallback = std::function<void(std::string_view)>;
 
     PipeClient() = default;
@@ -26,9 +28,14 @@ public:
     void Stop();
 
     bool RequestStatus();
+    bool RequestServiceShutdown();
     bool SetLiveStreamEnabled(bool enabled);
+    bool RequestHidHideStatus();
+    bool SetHidHideEnabled(bool enabled);
 
     void SetOnStatus(StatusCallback callback);
+    void SetOnHidHideStatus(HidHideStatusCallback callback);
+    void SetOnBridgeStatus(BridgeStatusCallback callback);
     void SetOnRawInput(TextCallback callback);
     void SetOnInfo(TextCallback callback);
 
@@ -46,6 +53,8 @@ private:
     std::mutex callback_mutex_;
 
     StatusCallback on_status_;
+    HidHideStatusCallback on_hidhide_status_;
+    BridgeStatusCallback on_bridge_status_;
     TextCallback on_raw_input_;
     TextCallback on_info_;
 };

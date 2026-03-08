@@ -1,5 +1,6 @@
 #pragma once
 
+#include "App.xaml.g.h"
 #include "MainWindow.xaml.h"
 
 #include <winrt/Microsoft.UI.Xaml.h>
@@ -15,3 +16,10 @@ private:
 };
 
 } // namespace winrt::DualSenseLinkUI::implementation
+
+namespace winrt::DualSenseLinkUI::factory_implementation {
+
+struct App : AppT<App, implementation::App> {
+};
+
+} // namespace winrt::DualSenseLinkUI::factory_implementation

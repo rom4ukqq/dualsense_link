@@ -1,0 +1,95 @@
+{
+  "version": 3,
+  "targets": {
+    "native,Version=v0.0": {},
+    "native,Version=v0.0/win": {},
+    "native,Version=v0.0/win-arm64": {},
+    "native,Version=v0.0/win-x64": {},
+    "native,Version=v0.0/win-x86": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "native,Version=v0.0": [
+      "Microsoft.Windows.CppWinRT >= 2.0.240405.15",
+      "Microsoft.WindowsAppSDK >= 1.6.250205002"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\CodexSandboxOffline\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\DualSenseLinkUI.vcxproj",
+      "projectName": "DualSenseLinkUI",
+      "projectPath": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\DualSenseLinkUI.vcxproj",
+      "packagesPath": "C:\\Users\\CodexSandboxOffline\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "UsingMicrosoftNETSdk": false,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\lisia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "native"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "native": {
+          "projectReferences": {}
+        }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "native": {
+        "dependencies": {
+          "Microsoft.Windows.CppWinRT": {
+            "target": "Package",
+            "version": "[2.0.240405.15, )"
+          },
+          "Microsoft.WindowsAppSDK": {
+            "target": "Package",
+            "version": "[1.6.250205002, )"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-arm64": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\r\n  An error occurred while sending the request.\r\n  Unable to connect to the remote server\r\n  An attempt was made to access a socket in a way forbidden by its access permissions 104.76.220.179:443",
+      "libraryId": "Microsoft.Windows.CppWinRT"
+    }
+  ]
+}

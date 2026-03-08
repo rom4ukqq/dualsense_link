@@ -191,8 +191,14 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Build KMDF + VHF driver skeleton target.
 DSL_BUILD_DRIVER:BOOL=ON
 
+//Build legacy Win32 UI target (diagnostic only).
+DSL_BUILD_LEGACY_WIN32_UI:BOOL=OFF
+
 //Expose WinUI 3 skeleton target.
 DSL_BUILD_UI:BOOL=ON
+
+//Expose WinUI 3 source skeleton to CMake IDE.
+DSL_REGISTER_WINUI_SKELETON:BOOL=ON
 
 //Value Computed by CMake
 dualsense-link_BINARY_DIR:STATIC=C:/Users/lisia/Documents/GitHub/dualsense_link/build

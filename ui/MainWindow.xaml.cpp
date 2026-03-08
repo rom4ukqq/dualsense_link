@@ -1,5 +1,8 @@
 #include "MainWindow.xaml.h"
 
+#include "ui_formatting.h"
+
+#include <cstdint>
 #include <string>
 #include <utility>
 #include <winrt/base.h>
@@ -8,7 +11,7 @@ namespace winrt::DualSenseLinkUI::implementation {
 
 namespace {
 
-std::wstring ConnectionStateText(const std::uint8_t connection_state) {
+std::wstring ConnectionLabel(const std::uint8_t connection_state) {
     if(connection_state == 2) {
         return L"Connected";
     }
@@ -45,15 +48,38 @@ std::wstring FaceButtonsText(const std::uint16_t mask) {
     return text;
 }
 
+std::wstring BridgeText(const dsl::ipc::BridgeMode mode) {
+    if(mode == dsl::ipc::BridgeMode::DriverBridge) {
+        return L"driver-bridge";
+    }
+    if(mode == dsl::ipc::BridgeMode::ConsoleFallback) {
+        return L"fallback";
+    }
+    return L"unknown";
+}
+
 } // namespace
 
 MainWindow::MainWindow() {
     InitializeComponent();
     dashboard_ = Dashboard();
+
+    if(service_process_.EnsureRunning()) {
+        service_state_text_ = service_process_.StatusText();
+    } else {
+        service_state_text_ = L"Service: start failed";
+        AppendRawInputLine(L"[error] unable to start dsl_service --background");
+    }
+
+    UpdateServiceText();
     StartPipeBridge();
+    RequestRefresh();
 }
 
 MainWindow::~MainWindow() {
+    service_process_.ShutdownIfLaunched([this]() {
+        return pipe_client_.RequestServiceShutdown();
+    });
     pipe_client_.Stop();
 }
 
@@ -74,7 +100,10 @@ void MainWindow::AppendRawInputLine(const std::wstring_view raw_line) {
 void MainWindow::OnRefreshClicked(
     winrt::Windows::Foundation::IInspectable const&,
     Microsoft::UI::Xaml::RoutedEventArgs const&) {
-    pipe_client_.RequestStatus();
+    service_process_.EnsureRunning();
+    service_state_text_ = service_process_.StatusText();
+    UpdateServiceText();
+    RequestRefresh();
 }
 
 void MainWindow::OnLiveOnClicked(
@@ -89,10 +118,24 @@ void MainWindow::OnLiveOffClicked(
     SetUiLive(false);
 }
 
+void MainWindow::OnHidHideOnClicked(
+    winrt::Windows::Foundation::IInspectable const&,
+    Microsoft::UI::Xaml::RoutedEventArgs const&) {
+    pipe_client_.SetHidHideEnabled(true);
+    pipe_client_.RequestHidHideStatus();
+}
+
+void MainWindow::OnHidHideOffClicked(
+    winrt::Windows::Foundation::IInspectable const&,
+    Microsoft::UI::Xaml::RoutedEventArgs const&) {
+    pipe_client_.SetHidHideEnabled(false);
+    pipe_client_.RequestHidHideStatus();
+}
+
 void MainWindow::StartPipeBridge() {
     pipe_client_.SetOnStatus([this](const dsl::ipc::StatusPayload& payload) {
         DispatcherQueue().TryEnqueue([this, payload]() {
-            UpdateControllerStatus(ConnectionStateText(payload.connection_state), payload.battery_percent);
+            UpdateControllerStatus(ConnectionLabel(payload.connection_state), payload.battery_percent);
             UpdateDashboardFromStatus(payload);
         });
     });
@@ -112,8 +155,20 @@ void MainWindow::StartPipeBridge() {
         });
     });
 
+    pipe_client_.SetOnHidHideStatus([this](const dsl::ipc::HidHideStatusPayload& payload) {
+        DispatcherQueue().TryEnqueue([this, payload]() {
+            HidHideStateText().Text(winrt::hstring(dualsense_link::ui::HidHideLabelText(payload)));
+            AppendRawInputLine(winrt::to_hstring(dualsense_link::ui::HidHideStatusLine(payload)));
+        });
+    });
+
+    pipe_client_.SetOnBridgeStatus([this](const dsl::ipc::BridgeStatusPayload& payload) {
+        DispatcherQueue().TryEnqueue([this, payload]() {
+            UpdateBridgeStatus(payload);
+        });
+    });
+
     pipe_client_.Start();
-    pipe_client_.RequestStatus();
 }
 
 void MainWindow::UpdateDashboardFromStatus(const dsl::ipc::StatusPayload& payload) {
@@ -127,9 +182,24 @@ void MainWindow::UpdateDashboardFromStatus(const dsl::ipc::StatusPayload& payloa
     dashboard_.SetSticksText(sticks);
 }
 
+void MainWindow::UpdateBridgeStatus(const dsl::ipc::BridgeStatusPayload& payload) {
+    bridge_mode_ = payload.mode;
+    UpdateServiceText();
+}
+
+void MainWindow::UpdateServiceText() {
+    const std::wstring text = service_state_text_ + L" | Bridge: " + BridgeText(bridge_mode_);
+    ServiceBridgeText().Text(winrt::hstring(text));
+}
+
 void MainWindow::SetUiLive(const bool enabled) {
     pipe_client_.SetLiveStreamEnabled(enabled);
     AppendRawInputLine(enabled ? L"[info] UI live stream ON" : L"[info] UI live stream OFF");
+}
+
+void MainWindow::RequestRefresh() {
+    pipe_client_.RequestStatus();
+    pipe_client_.RequestHidHideStatus();
 }
 
 } // namespace winrt::DualSenseLinkUI::implementation

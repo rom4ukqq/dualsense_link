@@ -1,91 +1,105 @@
 # DualSense Link
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
-[![Windows](https://img.shields.io/badge/Platform-Windows-blue)](https://www.microsoft.com)
+DualSense Link is a Windows 10/11 HID bridge:
 
-**DualSense Link** enables a Bluetooth-connected Sony DualSense Wireless Controller to appear as a wired USB DualSense controller on Windows, supporting full features: adaptive triggers, haptics, gyro, touchpad, LED, and battery reporting.
+`Bluetooth DualSense -> service -> virtual wired DualSense -> games`
 
----
+Stage 1 target is HID-first passthrough (input/output HID path), without controller USB audio.
 
-## 🔹 Features
+## Repository Layout
 
-- Full DualSense passthrough via Bluetooth  
-- Adaptive triggers & HD haptics support  
-- Gyroscope & accelerometer  
-- Touchpad and button input  
-- LED / lightbar control  
-- Battery level monitoring  
-- WinUI 3 GUI for live controller status and configuration  
+- `core/` - DualSense report parsing, CRC, BT<->USB translation.
+- `service/` - bridge runtime (Bluetooth I/O, driver bridge, HidHide integration, IPC).
+- `driver/` - KMDF + VHF virtual HID driver skeleton.
+- `ipc/` - named pipe protocol and server.
+- `ui/` - WinUI 3 source (`App.xaml`, `MainWindow.xaml`, dashboard) and `ui/winui3/DualSenseLinkUI.vcxproj`.
+- `shared/` - shared contracts (`driver_protocol.h`, common IDs/constants).
+- `scripts/` - build/install/run flow.
 
----
+## Service Modes
 
-## 📦 Project Structure
+- `--background` - for UI-driven flow.
+- `--console` - for diagnostics/manual commands.
+- `--allow-fallback` - allows console virtual HID fallback when driver bridge is unavailable.
 
-```
-dualsense-link/
-│
-├─ driver/       # KMDF driver using Virtual HID Framework (VHF)
-├─ core/         # Packet translation & DualSense report parsing
-├─ service/      # Background service handling Bluetooth & driver communication
-├─ ipc/          # Named Pipes for UI ↔ service communication
-├─ ui/           # WinUI 3 application
-├─ shared/       # Shared headers & structures
-└─ docs/         # Documentation and protocol references
-```
+Default mode is `--background`.
 
----
+## Driver Bridge Contract
 
-## ⚙️ How it works
+Service and driver communicate via `shared/driver_protocol.h`:
 
-1. Connect a Sony DualSense controller via Bluetooth.  
-2. The **backend service** reads Bluetooth HID reports from the controller.  
-3. Reports are **translated** from Bluetooth format to USB HID format.  
-4. The **Virtual HID driver (VHF)** exposes a virtual wired DualSense device to Windows.  
-5. Games see the virtual device and support **full DualSense features**.  
-6. The **WinUI 3 GUI** communicates with the service to display controller status and manage settings.
+- `IOCTL_DSL_GET_VERSION`
+- `IOCTL_DSL_SUBMIT_INPUT_REPORT`
+- `IOCTL_DSL_GET_OUTPUT_REPORT`
+- `IOCTL_DSL_PUSH_OUTPUT_REPORT` (debug/test injection)
 
-```
-Controller (Bluetooth)
-        ↓
-Backend service
-        ↓
-Virtual HID Driver (VHF)
-        ↓
-Windows sees wired DualSense
-        ↓
-Games
+## UI IPC Contract
+
+UI and service communicate via `\\.\pipe\DualSenseLink` (`ipc/commands.h`):
+
+- status stream (`ServiceStatus`)
+- raw/input info stream (`ServiceRawInput`, `ServiceInfo`)
+- explicit bridge mode state (`ServiceBridgeStatus`: `driver-bridge` or `fallback`)
+- HidHide status/toggle commands
+- shutdown command
+
+## Build and Run (PowerShell)
+
+1. Preflight check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\preflight.ps1
 ```
 
----
+2. Build backend (CMake):
 
-## 🖥 GUI Features
-
-- Live controller visualization with pressed buttons highlighted  
-- Battery level and connection status  
-- Adjustable LED color  
-- Trigger force and haptic intensity settings  
-- Debug panel with raw HID report stream  
-
----
-
-## 🚀 Getting Started
-
-1. Clone the repository:  
-```bash
-git clone https://github.com/yourusername/dualsense-link.git
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_backend.ps1 -Config Debug
 ```
 
-2. Open the solution in Visual Studio (requires WDK for driver).  
+3. Build WinUI 3 app (`.vcxproj`):
 
-3. Build `driver`, `service`, and `ui`.  
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_ui.ps1 -Config Debug
+```
 
-4. Connect your DualSense controller via Bluetooth.  
+If packages are already restored locally:
 
-5. Launch the UI to see live status and configure settings.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_ui.ps1 -Config Debug -SkipRestore
+```
 
----
+4. Run app:
 
-## 📄 License
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run_app.ps1 -Config Debug
+```
 
-DualSense Link is licensed under the MIT License. See [LICENSE](LICENSE.md) for details.
+Compatibility wrapper:
 
+```powershell
+.\run_ui.ps1
+```
+
+## Driver Install (Test-Signing)
+
+Driver install script requires admin rights, WDK, and test-signing mode:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install_driver.ps1
+```
+
+If test-signing is disabled:
+
+```powershell
+bcdedit /set testsigning on
+```
+
+Then reboot and rerun install.
+
+## Current Stage Notes
+
+- HID path is the focus: BT input to virtual wired HID, and output reports back to BT.
+- WinUI 3 is the primary UI path.
+- Win32 UI is kept only as legacy/diagnostic code path (`dsl_ui_legacy`, disabled by default in CMake).
+- Controller audio profile passthrough is out of scope for Stage 1.

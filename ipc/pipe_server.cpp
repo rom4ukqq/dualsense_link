@@ -43,6 +43,20 @@ bool PipeServer::SendStatus(const StatusPayload& status) {
     return SendMessage(CommandType::ServiceStatus, payload);
 }
 
+bool PipeServer::SendHidHideStatus(const HidHideStatusPayload& status) {
+    const auto payload = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(&status),
+        sizeof(status));
+    return SendMessage(CommandType::ServiceHidHideStatus, payload);
+}
+
+bool PipeServer::SendBridgeStatus(const BridgeStatusPayload& status) {
+    const auto payload = std::span<const std::uint8_t>(
+        reinterpret_cast<const std::uint8_t*>(&status),
+        sizeof(status));
+    return SendMessage(CommandType::ServiceBridgeStatus, payload);
+}
+
 bool PipeServer::SendRawInput(const std::string_view utf8_line) {
     const auto payload = std::span<const std::uint8_t>(
         reinterpret_cast<const std::uint8_t*>(utf8_line.data()),

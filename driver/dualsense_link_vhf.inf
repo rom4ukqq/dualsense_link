@@ -1,0 +1,48 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%ProviderName%
+CatalogFile=dualsense_link_vhf.cat
+DriverVer=03/08/2026,0.1.0.0
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,
+
+[SourceDisksFiles]
+dsl_driver.sys = 1
+
+[Manufacturer]
+%ProviderName%=DualSenseLink,NTamd64
+
+[DualSenseLink.NTamd64]
+%DeviceDesc%=DualSenseLink_Install,ROOT\DUALSENSELINKVHF
+
+[DualSenseLink_Install.NT]
+CopyFiles=@dsl_driver.sys
+
+[DualSenseLink_Install.NT.Services]
+AddService=dsl_driver,0x00000002,DualSenseLink_Service
+
+[DualSenseLink_Service]
+DisplayName=%ServiceDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\dsl_driver.sys
+
+[DualSenseLink_Install.NT.Wdf]
+KmdfService=dsl_driver,DualSenseLink_Wdf
+
+[DualSenseLink_Wdf]
+KmdfLibraryVersion=1.33
+
+[Strings]
+ProviderName="DualSense Link"
+DiskName="DualSense Link Driver Disk"
+DeviceDesc="DualSense Link Virtual HID Device"
+ServiceDesc="DualSense Link KMDF VHF Driver"
+

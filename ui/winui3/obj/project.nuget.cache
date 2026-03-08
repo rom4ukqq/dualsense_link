@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "XWFhI3GzhsM=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\DualSenseLinkUI.vcxproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\r\n  An error occurred while sending the request.\r\n  Unable to connect to the remote server\r\n  An attempt was made to access a socket in a way forbidden by its access permissions 104.76.220.179:443",
+      "projectPath": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\DualSenseLinkUI.vcxproj",
+      "filePath": "C:\\Users\\lisia\\Documents\\GitHub\\dualsense_link\\ui\\winui3\\DualSenseLinkUI.vcxproj",
+      "libraryId": "Microsoft.Windows.CppWinRT",
+      "targetGraphs": []
+    }
+  ]
+}

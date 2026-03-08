@@ -1,3 +1,9 @@
 C:\Users\lisia\Documents\GitHub\dualsense_link\service\main.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\main.obj
 C:\Users\lisia\Documents\GitHub\dualsense_link\service\bluetooth_manager.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\bluetooth_manager.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_runtime.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\console_runtime.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\console_virtual_hid_client.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\console_virtual_hid_client.obj
 C:\Users\lisia\Documents\GitHub\dualsense_link\service\controller_proxy.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\controller_proxy.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\driver_bridge_client.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\driver_bridge_client.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_helpers.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\hidhide_helpers.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\hidhide_manager.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\hidhide_manager.obj
+C:\Users\lisia\Documents\GitHub\dualsense_link\service\state_format.cpp;C:\Users\lisia\Documents\GitHub\dualsense_link\build\dsl_service.dir\Debug\state_format.obj

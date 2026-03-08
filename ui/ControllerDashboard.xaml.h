@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ControllerDashboard.xaml.g.h"
+
 #include <string_view>
 #include <winrt/Microsoft.UI.Xaml.h>
 
@@ -14,3 +16,10 @@ struct ControllerDashboard : ControllerDashboardT<ControllerDashboard> {
 };
 
 } // namespace winrt::DualSenseLinkUI::implementation
+
+namespace winrt::DualSenseLinkUI::factory_implementation {
+
+struct ControllerDashboard : ControllerDashboardT<ControllerDashboard, implementation::ControllerDashboard> {
+};
+
+} // namespace winrt::DualSenseLinkUI::factory_implementation

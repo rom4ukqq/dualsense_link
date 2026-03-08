@@ -26,6 +26,8 @@ public:
 
     void SetOnCommand(CommandCallback callback);
     bool SendStatus(const StatusPayload& status);
+    bool SendHidHideStatus(const HidHideStatusPayload& status);
+    bool SendBridgeStatus(const BridgeStatusPayload& status);
     bool SendRawInput(std::string_view utf8_line);
     bool SendInfo(std::string_view utf8_line);
 

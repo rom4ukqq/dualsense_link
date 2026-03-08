@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\App.xaml" />
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\App.xaml.h">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\App.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\MainWindow.xaml" />
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\MainWindow.xaml.h">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\MainWindow.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\ControllerDashboard.xaml" />
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\ControllerDashboard.xaml.h">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\ControllerDashboard.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\winui3\main.cpp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\winui3\DualSenseLinkUI.vcxproj" />
+    <None Include="C:\Users\lisia\Documents\GitHub\dualsense_link\ui\winui3\DualSenseLinkUI.vcxproj.filters" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B83FEAA7-881E-3C06-A30D-F4EA70CF8741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{45094AE4-D185-3D23-AD82-1DB36FBABB2B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
