@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="DualSenseLinkUI.ControllerDashboard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Width="520" Height="220" ColumnSpacing="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="D-Pad" />
+            <TextBlock x:Name="DpadStateText" Text="Centered" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Face Buttons" />
+            <TextBlock x:Name="FaceButtonsText" Text="None" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Analog Sticks" />
+            <TextBlock x:Name="SticksText" Text="LX 0 LY 0 RX 0 RY 0" />
+        </StackPanel>
+    </Grid>
+</UserControl>
