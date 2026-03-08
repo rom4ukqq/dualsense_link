@@ -87,5 +87,5 @@ git clone https://github.com/yourusername/dualsense-link.git
 
 ## 📄 License
 
-DualSense Link is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+DualSense Link is licensed under the MIT License. See [LICENSE](LICENSE.md) for details.
 
